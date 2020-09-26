@@ -90,9 +90,9 @@ public class Lesson1 {
     }
 
     public static void toCheckYear(int year) {
-        if (year%4 == 0){
-            if (year%100 == 0){
-                if (year%400 == 0) System.out.println("This year is leap");
+        if (year % 4 == 0){
+            if (year % 100 == 0){
+                if (year % 400 == 0) System.out.println("This year is leap");
                 else System.out.println("This year isn't leap");
             }
             else System.out.println("This year is leap");
