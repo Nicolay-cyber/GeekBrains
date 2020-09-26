@@ -18,15 +18,17 @@ public class Lesson1 {
         String myString = "My string";
 
         // TASK # 3
+
         float  firstNumber = (float) Math.random();
         System.out.print("a = " + firstNumber);
         System.out.print("; b = " + (firstNumber + 2));
         System.out.print("; c = " + (firstNumber * 10));
         System.out.println("; d = " + (firstNumber / 2));
         System.out.print("The result of a * (b + (c / d)) equation is ");
-        System.out.println(myEquation(firstNumber, firstNumber ++, firstNumber --,firstNumber * 2));
+        System.out.println(myEquation(firstNumber, (firstNumber +2), (firstNumber * 10),(firstNumber / 2)));
 
         // TASK # 4
+
         int  secondNumber = (int) (Math.random() * (20 + 1)) - 10;
         if(toCheckRange(secondNumber, secondNumber) == true){
             System.out.println("The sum of two  numbers " + secondNumber + "is in the range from 10 to 20");
@@ -57,7 +59,7 @@ public class Lesson1 {
         scanner = new Scanner(System.in);
         int year = scanner.nextInt();
         toCheckYear(year);
-        
+
     }
 
 
