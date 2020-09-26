@@ -20,12 +20,15 @@ public class Lesson1 {
         // TASK # 3
 
         float  firstNumber = (float) Math.random();
+        float b = firstNumber + 2f;
+        float c = firstNumber * 10f;
+        float d = firstNumber / 2f;
         System.out.print("a = " + firstNumber);
-        System.out.print("; b = " + (firstNumber + 2));
-        System.out.print("; c = " + (firstNumber * 10));
-        System.out.println("; d = " + (firstNumber / 2));
+        System.out.print("; b = " + b);
+        System.out.print("; c = " + c);
+        System.out.println("; d = " + d);
         System.out.print("The result of a * (b + (c / d)) equation is ");
-        System.out.println(myEquation(firstNumber, (firstNumber +2), (firstNumber * 10),(firstNumber / 2)));
+        System.out.println(myEquation(firstNumber, b, c, d));
 
         // TASK # 4
 
@@ -59,7 +62,6 @@ public class Lesson1 {
         scanner = new Scanner(System.in);
         int year = scanner.nextInt();
         toCheckYear(year);
-
     }
 
 
