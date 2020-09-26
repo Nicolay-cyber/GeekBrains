@@ -33,8 +33,8 @@ public class Lesson1 {
         // TASK # 4
 
         int  secondNumber = (int) (Math.random() * (20 + 1)) - 10;
-        if(toCheckRange(secondNumber, secondNumber) == true){
-            System.out.println("The sum of two  numbers " + secondNumber + "is in the range from 10 to 20");
+        if(toCheckRange(secondNumber, secondNumber)){
+            System.out.println("The sum of two numbers " + secondNumber + " is in the range from 10 to 20");
         }
         else {
             System.out.println("The sum of two numbers " + secondNumber + " isn't in the range from 10 to 20");
@@ -64,42 +64,24 @@ public class Lesson1 {
         toCheckYear(year);
     }
 
-
-
     public static float myEquation (float a, float b, float c, float d){
         return a * (b + (c / d));
     }
 
     public static boolean toCheckRange(int first, int second){
         boolean result = false;
-        if (first + second >= 10 && first + second <= 20){
-            result = true;
-        }
-        else{
-            result = false;
-        }
+        if (first + second >= 10 && first + second <= 20) result = true;
         return result;
     }
 
     public static void toCheckNumberSignAndPrint(int number){
-        String result;
-        if(number < 0){
-            result = "The number " + number + " is negative";
-        }
-        else{
-            result = "The number " + number + " is positive";
-        }
-        System.out.println(result);
+        if(number < 0) System.out.println("The number " + number + " is negative");
+        else System.out.println("The number " + number + " is positive");
     }
 
     public static boolean toCheckNumberSign(int number){
-        boolean checking;
-        if(number < 0){
-            checking = true;
-        }
-        else{
-            checking = false;
-        }
+        boolean checking = false;
+        if(number < 0)checking = true;
         return  checking;
     }
 
