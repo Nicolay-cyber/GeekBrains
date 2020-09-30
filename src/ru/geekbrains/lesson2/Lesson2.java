@@ -5,20 +5,13 @@ import java.util.Arrays;
 public class Lesson2 {
     public static void main(String[] args) {
         /*
-
-        6. ** Написать метод, в который передается не пустой одномерный целочисленный массив, метод должен вернуть true,
-        если в массиве есть место, в котором сумма левой и правой части массива равны. Примеры: checkBalance([2, 2, 2, 1, 2, 2, || 10, 1]) → true, checkBalance([1, 1, 1, || 2, 1]) → true, граница показана символами ||, эти символы в массив не входят.
-        7. **** Написать метод, которому на вход подается одномерный массив и число n (может быть положительным, или отрицательным), при этом метод должен сместить все элементымассива на n позиций. Для усложнения задачи нельзя пользоваться вспомогательными массивами.
-         */
-
-        /*
         # 1. Задать целочисленный массив, состоящий из элементов 0 и 1.
              Например: [ 1, 1, 0, 0, 1, 0, 1, 1, 0, 0 ].
              С помощью цикла и условия заменить 0 на 1, 1 на 0;
          */
         printTaskNumber(1);
         int[] arr = new int[10];
-        setRandomBinaryArrayIndex(arr);
+        setRandomArrayIndex(arr,0,1);
         printArray(arr);
         invertArray(arr);
         printArray(arr);
@@ -59,7 +52,7 @@ public class Lesson2 {
          */
 
         printTaskNumber(5);
-        setRandomArrayIndex(arr);
+        setRandomArrayIndex(arr,0,100);
         printArray(arr);
         System.out.println("The minimal array index is " + MinArrayIndex(arr));
         System.out.println("The maximum array index is " + MaxArrayIndex(arr));
@@ -71,10 +64,33 @@ public class Lesson2 {
              checkBalance([1, 1, 1, || 2, 1]) → true, граница показана символами ||, эти символы в массив не входят.
          */
         printTaskNumber(6);
-        setRandomBinaryArrayIndex(arr);
+        setRandomArrayIndex(arr,0,1);
         printArray(arr);
         findEqualPartsOfArray(arr);
 
+        /*
+        # 7. Написать метод, которому на вход подается одномерный массив и число n
+        (может быть положительным, или отрицательным),
+        при этом метод должен сместить все элементы массива на n позиций.
+        Для усложнения задачи нельзя пользоваться вспомогательными массивами.
+         */
+        printTaskNumber(7);
+
+        int interval = (int) (Math.random() * 11 - 5);
+        setRandomArrayIndex(arr,1,9);
+        System.out.println("Move indexes of the array");
+        printArray(arr);
+        System.out.print(Math.abs(interval) + " positions ");
+
+        if (interval < 0){
+            System.out.println("to the left");
+            moveIndexes(arr, interval);
+        }
+        else if (interval > 0){
+            System.out.println("to the right");
+            moveIndexes(arr, interval);
+        }
+        printArray(arr);
     }
 
     static void printTaskNumber(int number) {
@@ -82,11 +98,6 @@ public class Lesson2 {
         System.out.println("Task # " + number);
     }
 
-    static void setRandomBinaryArrayIndex(int[] arr) {
-        for (int i = 0; i < arr.length; i++) {
-            arr[i] = (int) (Math.random() * 2);
-        }
-    }
 
     static void printArray(int[] arr) {
         System.out.println(Arrays.toString(arr));
@@ -135,9 +146,9 @@ public class Lesson2 {
         }
     }
 
-    static void setRandomArrayIndex(int[] arr) {
+    static void setRandomArrayIndex(int[] arr, int from, int to) {
         for (int i = 0; i < arr.length; i++) {
-            arr[i] = (int) (Math.random() * 101);
+            arr[i] = (int) ((Math.random() * (to + 1 - from)) + from);
         }
     }
 
@@ -185,6 +196,7 @@ public class Lesson2 {
         }
         return hasEqualParts;
     }
+
     static int sumOfLeftPart(int[] arr, int index){
         int leftSum = 0;
         for(int i = 0; i < index; i++){
@@ -209,6 +221,29 @@ public class Lesson2 {
         System.out.println(Arrays.toString(leftPart) + " " + Arrays.toString(rightPart));
     }
 
+    static void moveIndexes(int[] arr, int shiftTo){
+        int loseIndex;
+        if(shiftTo > 0){
+            for(int j = 0; j < shiftTo; j++){
+                loseIndex = arr[arr.length - 1];
+                for (int i = arr.length - 1; i > 0; i--){
+                    arr[i] = arr[i - 1];
+                }
+                arr[0] = loseIndex;
+            }
+        }
+        else if (shiftTo < 0){
+            for (int j = 0; j < -shiftTo; j++){
+                loseIndex = arr[0];
+                for(int i = 0; i < arr.length - 1; i++){
+                    arr[i] = arr[i + 1];
+                }
+                arr[arr.length - 1] = loseIndex;
+            }
+        }
+
+
+    }
 }
 
 
