@@ -185,7 +185,6 @@ public class Lesson2 {
         }
         return hasEqualParts;
     }
-
     static int sumOfLeftPart(int[] arr, int index){
         int leftSum = 0;
         for(int i = 0; i < index; i++){
