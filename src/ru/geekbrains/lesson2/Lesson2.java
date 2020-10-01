@@ -137,6 +137,7 @@ public class Lesson2 {
                     array2D[i][j] = 1;
                 }
             }
+            array2D[i][array2D[i].length - i - 1] = 1;
         }
     }
 
