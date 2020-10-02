@@ -98,7 +98,6 @@ public class Lesson2 {
         System.out.println("Task # " + number);
     }
 
-
     static void printArray(int[] arr) {
         System.out.println(Arrays.toString(arr));
     }
@@ -242,8 +241,6 @@ public class Lesson2 {
                 arr[arr.length - 1] = loseIndex;
             }
         }
-
-
     }
 }
 
