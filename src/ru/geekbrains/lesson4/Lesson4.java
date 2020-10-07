@@ -13,6 +13,8 @@ public class Lesson4 {
     static char PLAYER_PIECE = DOT_EMPTY;
     static boolean IS_PLAYER_FIRST;
     static int SCORE = 0;
+    static int THIS_X_MUST_BE_BLOCKED = -1;
+    static int THIS_Y_MUST_BE_BLOCKED = -1;
 
     public static void main(String[] args)
     {
@@ -153,7 +155,14 @@ public class Lesson4 {
         {
             return false;
         }
-        else return map[y][x] == DOT_EMPTY;
+        else if (map[y][x] == DOT_EMPTY)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
     static void playerTurn()
     {
@@ -176,8 +185,18 @@ public class Lesson4 {
         int y;
         do
         {
-            x = random.nextInt(SIZE);
-            y = random.nextInt(SIZE);
+            if(THIS_Y_MUST_BE_BLOCKED > -1 && THIS_X_MUST_BE_BLOCKED > -1)
+            {
+                x = THIS_X_MUST_BE_BLOCKED;
+                y = THIS_Y_MUST_BE_BLOCKED;
+                THIS_X_MUST_BE_BLOCKED = -1;
+                THIS_Y_MUST_BE_BLOCKED = -1;
+            }
+            else
+            {
+                x = random.nextInt(SIZE);
+                y = random.nextInt(SIZE);
+            }
         }
         while (!isCellEmpty(x,y));
         System.out.println("\nThe computer moves to the point: " + (x + 1) + " " + (y + 1));
@@ -306,26 +325,49 @@ public class Lesson4 {
     {
         for(int i = 0; i < SIZE; i++)
         {
+            SCORE = 0;
             for (int j = 0; j < SIZE; j++)
             {
-                if(SCORE == DOTS_TO_WIN)
-                {
-                    return true;
-                }
                 if((map[i][j] != symbol && SCORE > 0))
                 {
+                    blockLeft(i,j);
+                    blockRight(i,j);
                     SCORE = 0;
                 }
                 else if(map[i][j] == symbol)
                 {
                     SCORE++;
                 }
-                if(j == SIZE - 1 && SCORE < DOTS_TO_WIN){
-                    SCORE = 0;
+                if(SCORE == DOTS_TO_WIN)
+                {
+                    return true;
                 }
             }
         }
         return false;
+
+    }
+    static void blockRight(int x, int y)
+    {
+            if(SCORE > 1 && map[x][y] == DOT_EMPTY)
+            {
+                THIS_X_MUST_BE_BLOCKED = y;
+                THIS_Y_MUST_BE_BLOCKED = x;
+            }
+
+
+
+    }
+    static void blockLeft(int x, int y)
+    {
+        if(SCORE > 1 && map[x][y - 1] == PLAYER_PIECE)
+        {
+            {
+                THIS_X_MUST_BE_BLOCKED = y - (SCORE + 1);
+                THIS_Y_MUST_BE_BLOCKED = x;
+            }
+
+        }
 
     }
     static boolean hasDraw()
