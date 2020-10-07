@@ -342,6 +342,10 @@ public class Lesson4 {
                 {
                     return true;
                 }
+                if(j == SIZE - 1){
+                    blockLeft(i, j);
+                    SCORE = 0;
+                }
             }
         }
         return false;
@@ -349,26 +353,26 @@ public class Lesson4 {
     }
     static void blockRight(int x, int y)
     {
-            if(SCORE > 1 && map[x][y] == DOT_EMPTY)
-            {
-                THIS_X_MUST_BE_BLOCKED = y;
-                THIS_Y_MUST_BE_BLOCKED = x;
-            }
-
-
-
+        if(SCORE > 1 && map[x][y] == DOT_EMPTY)
+        {
+            System.out.println("RIGHT!");
+            THIS_X_MUST_BE_BLOCKED = y;
+            THIS_Y_MUST_BE_BLOCKED = x;
+        }
     }
     static void blockLeft(int x, int y)
     {
         if(SCORE > 1 && map[x][y - 1] == PLAYER_PIECE)
         {
             {
+                System.out.println("LEFT!");
                 THIS_X_MUST_BE_BLOCKED = y - (SCORE + 1);
+                if(y == SIZE - 1){
+                    THIS_X_MUST_BE_BLOCKED = y - (SCORE);
+                }
                 THIS_Y_MUST_BE_BLOCKED = x;
             }
-
         }
-
     }
     static boolean hasDraw()
     {
