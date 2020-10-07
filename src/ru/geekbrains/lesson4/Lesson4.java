@@ -309,8 +309,8 @@ public class Lesson4 {
                 }
                 if(map[j][i] != symbol && SCORE > 0)
                 {
+                    blockLeft(i, j);
                     blockRight(j, i);
-                    //blockTop(j, i);
                     SCORE = 0;
                 }
                 else if(map[j][i] == symbol)
@@ -318,6 +318,7 @@ public class Lesson4 {
                     SCORE++;
                 }
                 if(j == SIZE - 1 && SCORE < DOTS_TO_WIN){
+                    blockTop(i, j);
                     SCORE = 0;
                 }
             }
@@ -328,7 +329,6 @@ public class Lesson4 {
     {
         for(int i = 0; i < SIZE; i++)
         {
-            SCORE = 0;
             for (int j = 0; j < SIZE; j++)
             {
                 if((map[i][j] != symbol && SCORE > 0))
@@ -356,7 +356,7 @@ public class Lesson4 {
     }
     static void blockRight(int x, int y)
     {
-        if(SCORE > 1 && map[x][y] == DOT_EMPTY)
+        if(SCORE > 1)
         {
             System.out.println("RIGHT!");
             THIS_X_MUST_BE_BLOCKED = y;
@@ -365,28 +365,28 @@ public class Lesson4 {
     }
     static void blockTop(int x, int y)
     {
-        if(SCORE > 1 && map[x - 1][y] == PLAYER_PIECE && map[x - SCORE + 1][y] != AI_PIECE)
+        if(SCORE > 1)
         {
             System.out.println("TOP!");
-
-            THIS_Y_MUST_BE_BLOCKED = x - (SCORE + 1);
-            THIS_X_MUST_BE_BLOCKED = y;
+            THIS_Y_MUST_BE_BLOCKED = y - (SCORE + 1);
+            if (y == SIZE - 1)
+            {
+                THIS_Y_MUST_BE_BLOCKED = y - SCORE;
+            }
+            THIS_X_MUST_BE_BLOCKED = x;
         }
-
     }
     static void blockLeft(int x, int y)
     {
-        if(SCORE > 1 && map[x][y - 1] == PLAYER_PIECE)
+        if(SCORE > 1)
         {
-
                 System.out.println("LEFT!");
                 THIS_X_MUST_BE_BLOCKED = y - (SCORE + 1);
-                if(y == SIZE - 1 && map[x][y] != AI_PIECE){
+                if(y == SIZE - 1)
+                {
                     THIS_X_MUST_BE_BLOCKED = y - SCORE;
-                    System.out.println("Close left " + (y - SCORE));
                 }
                 THIS_Y_MUST_BE_BLOCKED = x;
-
         }
     }
     static boolean hasDraw()

@@ -39,10 +39,14 @@ public class Lesson3 {
                 else if(answer == 1) {
                     firstTask();
                     isAnswerCorrect = true;
+                    System.out.println("\u001b[2J");
+                    System.out.println("\u001b[32m dgdfg");
                 }
                 else{
                     secondTask();
                     isAnswerCorrect = true;
+                    System.out.println("\u001b[2J");
+                    System.out.println("\u001b[32m dgdfg");
                 }
             }
             else{
