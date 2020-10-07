@@ -1,5 +1,6 @@
 package ru.geekbrains.lesson4;
 
+import java.net.ServerSocket;
 import java.util.Arrays;
 import java.util.Random;
 import java.util.Scanner;
@@ -309,6 +310,7 @@ public class Lesson4 {
                 if(map[j][i] != symbol && SCORE > 0)
                 {
                     blockRight(j, i);
+                    //blockTop(j, i);
                     SCORE = 0;
                 }
                 else if(map[j][i] == symbol)
@@ -361,22 +363,30 @@ public class Lesson4 {
             THIS_Y_MUST_BE_BLOCKED = x;
         }
     }
-    static void blockTOP(int x, int y)
+    static void blockTop(int x, int y)
     {
+        if(SCORE > 1 && map[x - 1][y] == PLAYER_PIECE && map[x - SCORE + 1][y] != AI_PIECE)
+        {
+            System.out.println("TOP!");
+
+            THIS_Y_MUST_BE_BLOCKED = x - (SCORE + 1);
+            THIS_X_MUST_BE_BLOCKED = y;
+        }
 
     }
     static void blockLeft(int x, int y)
     {
         if(SCORE > 1 && map[x][y - 1] == PLAYER_PIECE)
         {
-            {
+
                 System.out.println("LEFT!");
                 THIS_X_MUST_BE_BLOCKED = y - (SCORE + 1);
-                if(y == SIZE - 1){
-                    THIS_X_MUST_BE_BLOCKED = y - (SCORE);
+                if(y == SIZE - 1 && map[x][y] != AI_PIECE){
+                    THIS_X_MUST_BE_BLOCKED = y - SCORE;
+                    System.out.println("Close left " + (y - SCORE));
                 }
                 THIS_Y_MUST_BE_BLOCKED = x;
-            }
+
         }
     }
     static boolean hasDraw()
