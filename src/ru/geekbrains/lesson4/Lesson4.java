@@ -308,6 +308,7 @@ public class Lesson4 {
                 }
                 if(map[j][i] != symbol && SCORE > 0)
                 {
+                    blockRight(j, i);
                     SCORE = 0;
                 }
                 else if(map[j][i] == symbol)
@@ -359,6 +360,10 @@ public class Lesson4 {
             THIS_X_MUST_BE_BLOCKED = y;
             THIS_Y_MUST_BE_BLOCKED = x;
         }
+    }
+    static void blockTOP(int x, int y)
+    {
+
     }
     static void blockLeft(int x, int y)
     {
