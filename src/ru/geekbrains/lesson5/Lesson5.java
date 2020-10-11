@@ -158,7 +158,7 @@ public class Lesson5 {
                     }
                 }
                 if(notFounded == employees.size()){
-                    System.out.println("Not found employees over " + age + " year old:");
+                    System.out.println("\nNot found employees over " + age + " year old:");
                 }
                 break;
             case 2:
@@ -172,7 +172,7 @@ public class Lesson5 {
                     }
                 }
                 if(notFounded == employees.size()){
-                    System.out.println("Not found employees uner " + age);
+                    System.out.println("\nNot found employees under " + age);
                 }
                 break;
         }
