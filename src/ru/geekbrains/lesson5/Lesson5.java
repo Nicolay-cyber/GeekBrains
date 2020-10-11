@@ -9,8 +9,9 @@ public class Lesson5 {
         ArrayList<Employee> employees = new ArrayList<>(5);
         createDefaultEmployees(employees);
         do {
-            System.out.println("\n1 - Show all employees\n2 - Add new employee\n3 - Delete employee\n0 - Exit\n");
-            answer = getNumberFromConsoleOnlyBetween(0,3);
+            System.out.println("\n1 - Show all employees\n2 - Add new employee\n" +
+                    "3 - Delete employee\n4 - Select employees by age\n0 - Exit\n");
+            answer = getNumberFromConsoleOnlyBetween(0,4);
             switch (answer){
                 case 1:
                     showAllEmployees(employees);
@@ -20,6 +21,9 @@ public class Lesson5 {
                     break;
                 case 3:
                     deleteEmployee(employees);
+                    break;
+                case 4:
+                    showEmployeesWhichOlder(employees);
             }
         }while (answer != 0);
 
@@ -124,7 +128,8 @@ public class Lesson5 {
         while (!answer.equals("0"));
 
     }
-    static Employee getEmployeeByName(String fullName, ArrayList<Employee> employees){
+    static Employee getEmployeeByName(String fullName, ArrayList<Employee> employees)
+    {
         for (Employee employee : employees) {
             if (fullName.equals(employee.getFullName())) {
                 return employee;
@@ -132,5 +137,44 @@ public class Lesson5 {
         }
         System.out.println("Employee is not found\n0 - Exit");
         return null;
+    }
+    static void showEmployeesWhichOlder(ArrayList<Employee> employees)
+    {
+        System.out.println("Type age");
+        int age = getNumberFromConsoleOnlyBetween(18, 65);
+        System.out.println("1 - Show employees over " + age + " year old");
+        System.out.println("2 - Show employees under " + age);
+        int answer = getNumberFromConsoleOnlyBetween(1, 2);
+        int notFounded = 0;
+        switch (answer){
+            case 1:
+                for(Employee employee: employees)
+                {
+                    if(employee.getAge() > age){
+                        employee.getFullInfo();
+                    }
+                    else {
+                        notFounded++;
+                    }
+                }
+                if(notFounded == employees.size()){
+                    System.out.println("Not found employees over " + age + " year old:");
+                }
+                break;
+            case 2:
+                for(Employee employee: employees)
+                {
+                    if(employee.getAge() < age){
+                        employee.getFullInfo();
+                    }
+                    else {
+                        notFounded++;
+                    }
+                }
+                if(notFounded == employees.size()){
+                    System.out.println("Not found employees uner " + age);
+                }
+                break;
+        }
     }
 }

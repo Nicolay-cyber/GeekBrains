@@ -61,4 +61,8 @@ public class Employee {
     public String getFullName() {
         return fullName;
     }
+
+    public int getAge() {
+        return age;
+    }
 }
