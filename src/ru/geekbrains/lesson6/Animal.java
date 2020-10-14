@@ -1,6 +1,5 @@
 package ru.geekbrains.lesson6;
 
-import java.util.Scanner;
 
 public abstract class Animal
 {
@@ -13,12 +12,6 @@ public abstract class Animal
         this.maxSwimDistance = (int) (Math.random() * ((maxSwimDistance + 3) - (maxSwimDistance - 3) + 1) + (maxSwimDistance - 3));
         this.maxRunDistance = (int) (Math.random() * ((maxRunDistance + 100) - (maxRunDistance - 100) + 1) + (maxRunDistance - 100));
         this.maxJumpHeight = (int) (Math.random() * ((maxJumpHeight + 20) - (maxJumpHeight - 20) + 1) + (maxJumpHeight - 20));
-    }
-    public void setName()
-    {
-        System.out.println("Type the its name");
-        Scanner scanner = new Scanner(System.in);
-        this.name = scanner.nextLine();
     }
     public void setName(String name)
     {
@@ -34,7 +27,7 @@ public abstract class Animal
     }
     public void run()
     {
-        System.out.println("The " + name + " ran " + maxRunDistance +
+        System.out.print("The " + name + " ran " + maxRunDistance +
                 " metres and jumped over " + maxJumpHeight + "-cm fence");
     }
     public void swim()
@@ -45,8 +38,20 @@ public abstract class Animal
         }
         else
         {
-            System.out.println("The " + name + " swam " + maxSwimDistance + " meters");
+            System.out.print("The " + name + " swam " + maxSwimDistance + " meters");
         }
+    }
+
+    public int getMaxRunDistance() {
+        return maxRunDistance;
+    }
+
+    public int getMaxSwimDistance() {
+        return maxSwimDistance;
+    }
+
+    public int getMaxJumpHeight() {
+        return maxJumpHeight;
     }
 }
 
