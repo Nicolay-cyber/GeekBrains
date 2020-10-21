@@ -1,6 +1,9 @@
 package ru.geekbrains.lesson8;
 
 import javax.swing.*;
+import javax.swing.text.SimpleAttributeSet;
+import javax.swing.text.StyleConstants;
+import javax.swing.text.StyledDocument;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -14,8 +17,8 @@ public class Calculator extends JFrame
     private static final int DIVISION = 4;
     private static final int SHOW_RESULT = 5;
     private int action = START;
-    private double previousAction = 0;
-    private JTextArea screen = new JTextArea ();
+    private int previousAction = 0;
+    private JTextPane  screen = new JTextPane ();
     private String expression = "";
     private String signAction = "";
     private double previousNumber = 0;
@@ -25,16 +28,16 @@ public class Calculator extends JFrame
 
     public Calculator()
     {
-        GridLayout gridLayout = new GridLayout(5,4);
+        GridLayout gridLayout = new GridLayout(4,4);
         JPanel panel = new JPanel(gridLayout);
 
         setWindow();
 
-        screenSetting(screen);
+        screenSetting();
 
         buttonSetting(panel);
 
-        add(panel, BorderLayout.CENTER);
+        add(panel);
         setVisible(true);
     }
 
@@ -49,21 +52,24 @@ public class Calculator extends JFrame
         JButton subtraction = new JButton("-");
         JButton equal = new JButton("=");
 
-        JButton[] btns = new JButton[17];
+        JButton[] btns = new JButton[16];
         btns[0] = clear;
         btns[1] = division;
         btns[2] = multiplication;
-        btns[3] = delete;
-        for (int i = 4; i < btns.length - 3; i++ )
+        //btns[3] = delete;
+        for (int i = 3; i < btns.length - 3; i++ )
         {
-            btns[i] = new JButton("" + (i - 4));
+            btns[i] = new JButton("" + (i - 3));
         }
-        btns[14] = addition;
-        btns[15] = subtraction;
-        btns[16] = equal;
+        btns[13] = addition;
+        btns[14] = subtraction;
+        btns[15] = equal;
 
         for(JButton button: btns)
         {
+            button.setBackground(Color.DARK_GRAY);
+            button.setForeground(Color.LIGHT_GRAY);
+            button.setFont(new Font("Calibri Light", Font.PLAIN, 25));
             button.addActionListener(buttonListener);
             panel.add(button);
         }
@@ -73,17 +79,14 @@ public class Calculator extends JFrame
         @Override
         public void actionPerformed(ActionEvent e)
         {
-            switch (e.getActionCommand())
-            {
-                case "C":
-                    System.out.println("C is clicked");
-                    expression = "";
-                    signAction = "";
-                    result = 0;
-                    previousNumber = 0;
-                    inputNumber = 0;
-                    action = START;
-                    break;
+            if ("C".equals(e.getActionCommand())) {
+                System.out.println("C is clicked");
+                expression = "";
+                signAction = "";
+                result = 0;
+                previousNumber = 0;
+                inputNumber = 0;
+                action = START;
             }
             if(isNumeric(e.getActionCommand()))
             {
@@ -185,16 +188,28 @@ public class Calculator extends JFrame
         }
 
     }
-    public void screenSetting(JTextArea screen )
+    public void screenSetting()
     {
-        screen.setLineWrap(true);
-        screen.setPreferredSize(new Dimension(getWidth(),100));
+
+        screen.setAutoscrolls(true);
+        screen.setBorder(BorderFactory.createEmptyBorder(30,20,20,20));
+        StyledDocument doc = screen.getStyledDocument();
+        SimpleAttributeSet right = new SimpleAttributeSet();
+        StyleConstants.setAlignment(right, StyleConstants.ALIGN_RIGHT);
+        doc.setParagraphAttributes(0, doc.getLength(), right, false);
+        screen.setEditable(false);
+
+        screen.setFont(new Font("Calibri Light", Font.PLAIN, 30));
+        screen.setBackground(Color.getHSBColor(0,0,0.9f));
+        screen.setPreferredSize(new Dimension(getWidth(),250));
         add(screen, BorderLayout.NORTH);
     }
     public void setWindow()
     {
         setTitle("Calculator");
-        setBounds(500, 200, 400, 600);
+
+        setBackground(Color.DARK_GRAY);
+        setBounds(500, 200, 340, 600);
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setResizable(false);
     }
