@@ -41,7 +41,7 @@ public class Calculator extends JFrame
         setVisible(true);
     }
 
-    void buttonSetting(JPanel panel)
+    private void buttonSetting(JPanel panel)
     {
         ActionListener buttonListener = new ButtonListener();
         JButton clear = new JButton("C");
@@ -74,7 +74,7 @@ public class Calculator extends JFrame
             panel.add(button);
         }
     }
-    public class ButtonListener implements java.awt.event.ActionListener
+    private class ButtonListener implements java.awt.event.ActionListener
     {
         @Override
         public void actionPerformed(ActionEvent e)
@@ -123,7 +123,7 @@ public class Calculator extends JFrame
             System.out.println();
         }
     }
-    public static String removeLastChar(String s)
+    private static String removeLastChar(String s)
     {
         return (s == null || s.length() == 0)
                 ? null
@@ -144,7 +144,7 @@ public class Calculator extends JFrame
         signAction = "";
         expression += e.getActionCommand();
         inputNumberTXT += e.getActionCommand();
-        inputNumber = Integer.parseInt(inputNumberTXT);
+        inputNumber = Integer.parseInt(inputNumberTXT.trim());
         if(action == START)
         {
             result = inputNumber;
@@ -188,9 +188,8 @@ public class Calculator extends JFrame
         }
 
     }
-    public void screenSetting()
+    private void screenSetting()
     {
-
         screen.setAutoscrolls(true);
         screen.setBorder(BorderFactory.createEmptyBorder(30,20,20,20));
         StyledDocument doc = screen.getStyledDocument();
@@ -204,13 +203,13 @@ public class Calculator extends JFrame
         screen.setPreferredSize(new Dimension(getWidth(),250));
         add(screen, BorderLayout.NORTH);
     }
-    public void setWindow()
+    private void setWindow()
     {
         setTitle("Calculator");
 
         setBackground(Color.DARK_GRAY);
         setBounds(500, 200, 340, 600);
-        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         setResizable(false);
     }
     private void correctionOfResult()
