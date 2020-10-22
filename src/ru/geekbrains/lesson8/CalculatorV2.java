@@ -17,8 +17,6 @@ public class CalculatorV2 extends JFrame
                             '1', '2', '3', '+',
                             'm', '0', '.', '='  };
     private String expression = "";
-    private boolean isLastSymbolNumeric = false;
-    private boolean hasNumberDot = false;
 
 
 
@@ -113,35 +111,22 @@ public class CalculatorV2 extends JFrame
                 case "=":
                     break;
                 case ".":
-                    if (!expression.equals("") && !hasNumberDot )
+                    if(!expression.equals("")&& !hasLastNumberDot())
                     {
-                        if(!isLastSymbolNumeric && !hasPreviousNumberDot())
-                        {
+                        if (!isNumeric(getLastSymbol()))
                             expression = removeLastChar(expression);
-                            expression += e.getActionCommand();
-                            isLastSymbolNumeric = false;
-                            hasNumberDot = true;
-                        }
-                        if(isLastSymbolNumeric)
-                        {
-                            expression += e.getActionCommand();
-                            isLastSymbolNumeric = false;
-                            hasNumberDot = true;
-                        }
+                        expression += e.getActionCommand();
                     }
                     break;
                 default:
                     if(isNumeric(e.getActionCommand()))
                     {
-                        isLastSymbolNumeric = true;
                         expression += e.getActionCommand();
                     }
                     else if (!expression.equals(""))
                     {
-                        hasNumberDot = false;
-                        if(!isLastSymbolNumeric)
+                        if(!isNumeric(getLastSymbol()))
                             expression = removeLastChar(expression);
-                        isLastSymbolNumeric = false;
                         expression += e.getActionCommand();
                     }
                     break;
@@ -175,9 +160,10 @@ public class CalculatorV2 extends JFrame
         System.out.println
         (
             "\nExpression: " + expression
-            + "\nIs last symbol numeric: " + isLastSymbolNumeric
-            + "\nHas number dot: " + hasNumberDot
+            + "\nIs last symbol numeric: " + isNumeric(getLastSymbol())
+            + "\nHas number dot: " + hasLastNumberDot()
             + "\nLast number: " + getLastNumber()
+            + "\nLast symbol: " + getLastSymbol()
 //            + "\nHas Previous Number Dot: "
         );
 
@@ -199,12 +185,33 @@ public class CalculatorV2 extends JFrame
         }
         while (true);
     }
-    private char getLastSymbol()
+    private String getLastSymbol()
     {
-        return expression.charAt(expression.length() - 1);
+        return (expression == null || expression.length() == 0)
+                ? null
+                : String.valueOf(expression.charAt(expression.length() - 1));
+
     }
     private String getLastNumber()
     {
-        return "";
+
+        if (expression.length() == 0)
+            return "";
+        int index = expression.length() - 1;
+        if(!isNumeric(getLastSymbol()))
+            index--;
+        int i = index;
+        do
+        {
+            if(i == 0 || !isCharNumeric(expression.charAt(i - 1)) && expression .charAt(i - 1) != '.'){
+                return expression.substring(i, index + 1);
+            }
+            i--;
+        }
+            while (true);
+    }
+    private boolean hasLastNumberDot()
+    {
+        return getLastNumber().contains(".");
     }
 }
