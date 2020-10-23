@@ -11,45 +11,39 @@ import java.awt.event.ActionListener;
 public class CalculatorV2 extends JFrame
 {
     private JTextPane  screen = new JTextPane ();
-    char[] buttonSymbols = {'(' ,'C', 'c', 'd',
-                            '7', '8', '9', '×',
-                            '4', '5', '6', '-',
-                            '1', '2', '3', '+',
-                            'm', '0', '.', '='  };
+    char[] buttonSymbols = {'(' ,')', 'c', 'C',
+                            '7', '8', '9', 'd',
+                            '4', '5', '6', '×',
+                            '1', '2', '3', '-',
+                            'm', '0', '.', '+'  };
     private String expression = "";
-
-
-
     public CalculatorV2()
     {
         setGUI();
-
         setVisible(true);
     }
-
     private void setGUI()
     {
         windowSetting();
         calculatorScreenSetting();
         calculatorKeyboardSetting();
     }
-
     private void windowSetting()
     {
+        setBackground(Color.DARK_GRAY);
         setBounds(500, 200, 340, 600);
         setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         setResizable(false);
-        setLocationRelativeTo(null);
     }
     private void calculatorScreenSetting()
     {
-        screen.setBorder(BorderFactory.createEmptyBorder(30,20,20,20));
         StyledDocument doc = screen.getStyledDocument();
         SimpleAttributeSet right = new SimpleAttributeSet();
         StyleConstants.setAlignment(right, StyleConstants.ALIGN_RIGHT);
         doc.setParagraphAttributes(0, doc.getLength(), right, false);
-        screen.setEditable(false);
 
+        screen.setEditable(false);
+        screen.setBorder(BorderFactory.createEmptyBorder(30,20,20,20));
         screen.setFont(new Font("Calibri Light", Font.PLAIN, 30));
         screen.setBackground(Color.getHSBColor(0,0,0.9f));
         screen.setPreferredSize(new Dimension(getWidth(),250));
@@ -73,9 +67,6 @@ public class CalculatorV2 extends JFrame
                 case 'm':
                     button.setText("||");
                     break;
-                case '(':
-                    button.setText("( )");
-                    break;
                 default:
                     button.setText(String.valueOf(buttonSymbols));
                     break;
@@ -94,40 +85,53 @@ public class CalculatorV2 extends JFrame
         @Override
         public void actionPerformed(ActionEvent e)
         {
+            String buttonSym = e.getActionCommand();
             switch (e.getActionCommand())
             {
-                case "( )":
+                case "(":
+                    if(isScreenEmpty() || !isLastSymNum() && !isLastSym('.', ')', '|'))
+                        expression += buttonSym;
+                    break;
+                case ")":
+                    if(hasOpened('(', ')') && hasBracketsAction())
+                    {
+                        if(!isLastSymNum() && !isLastSym(')'))
+                            removeLastChar();
+                        expression += buttonSym;
+                    }
                     break;
                 case "C":
                     expression = "";
                     break;
                 case "CE":
+                    int indexRemoving = expression.indexOf(getLastNum());
+                    expression = expression.substring(0, indexRemoving);
+                    if(!isLastSymNum())
+                        removeLastChar();
                     break;
                 case "DEL":
-                    expression = removeLastChar(expression);
+                    removeLastChar();
                     break;
                 case "||":
                     break;
-                case "=":
-                    break;
                 case ".":
-                    if(!expression.equals("")&& !hasLastNumberDot())
-                    {
-                        if (!isNumeric(getLastSymbol()))
-                            expression = removeLastChar(expression);
-                        expression += e.getActionCommand();
-                    }
+                    dotClicked(buttonSym);
                     break;
                 default:
-                    if(isNumeric(e.getActionCommand()))
+                    if(isNumeric(buttonSym.charAt(0)))
                     {
-                        expression += e.getActionCommand();
+                        if (!isLastSym(')'))
+                        expression += buttonSym;
                     }
-                    else if (!expression.equals(""))
+                    else if (!isScreenEmpty())
                     {
-                        if(!isNumeric(getLastSymbol()))
-                            expression = removeLastChar(expression);
-                        expression += e.getActionCommand();
+                        if(!isLastSymNum() && !isLastSym(')'))
+                        {
+                            removeLastChar();
+                            if(!isLastSymNum())
+                                removeLastChar();
+                        }
+                        expression += buttonSym;
                     }
                     break;
             }
@@ -135,83 +139,107 @@ public class CalculatorV2 extends JFrame
             info();
         }
     }
-    private boolean isNumeric(String strNum)
+    private void dotClicked(String buttonSym)
+    {
+        if(!isScreenEmpty() && !hasLastNumberDot())
+        {
+            if(!isLastSymNum())
+            {
+                removeLastChar();
+                if(!isLastSymNum())
+                    removeLastChar();
+            }
+            expression += buttonSym;
+        }
+    }
+    private boolean hasBracketsAction()
+    {
+        int actionIndex = expression.lastIndexOf(getLastNum()) - 1;
+        char sym = expression.charAt(actionIndex);
+        return sym != '(';
+    }
+    private boolean isScreenEmpty()
+    {
+        return expression.length() == 0;
+    }
+    private boolean isLastSym(char ... sym){
+        if(!(expression == null) && !(expression.length() == 0))
+        {
+            for(char s: sym)
+                if(getLastSym() == s)
+                    return true;
+        }
+        return false;
+    }
+    private boolean isNumeric(char strNum)
     {
         try {
-            double d = Double.parseDouble(strNum);
+            Double.parseDouble(String.valueOf(strNum));
         } catch (NumberFormatException | NullPointerException nfe) {
             return false;
         }
         return true;
     }
-    private boolean isCharNumeric(char symbol)
+    private void removeLastChar()
     {
-        String symb = String.valueOf(symbol);
-        return isNumeric(symb);
-    }
-    private String removeLastChar(String s)
-    {
-        if(!(s == null) && !(s.length() == 0))
-            return s.substring(0, s.length() - 1);
-        return "";
+        if(!(expression == null) && !isScreenEmpty())
+            expression = expression.substring(0, expression.length() - 1);
     }
     private void info()
     {
         System.out.println
         (
             "\nExpression: " + expression
-            + "\nIs last symbol numeric: " + isNumeric(getLastSymbol())
-            + "\nHas number dot: " + hasLastNumberDot()
-            + "\nLast number: " + getLastNumber()
-            + "\nLast symbol: " + getLastSymbol()
-//            + "\nHas Previous Number Dot: "
+            + "\nIs last symbol numeric: " + isLastSymNum()
+            + "\nHas last number dot: " + hasLastNumberDot()
+            + "\nLast number: " + getLastNum()
+            + "\nLast symbol: " + getLastSym()
+            + "\nHas opened brackets: " + hasOpened('(', ')')
         );
 
     }
-    private boolean hasPreviousNumberDot()
+    private char getLastSym()
     {
-        int dotIndex = expression.lastIndexOf(".");
-        char symbol = 0;
-        int index = expression.length() - 2;
-        do {
-            symbol = expression.charAt(index);
-            if(!isCharNumeric(symbol) && index == dotIndex)
-                return true;
-            if(!isCharNumeric(symbol) && index > dotIndex)
-                return false;
-            if(index <= 0)
-                return false;
-            index--;
-        }
-        while (true);
+        return (expression == null || isScreenEmpty())
+                ? '='
+                : expression.charAt(expression.length() - 1);
     }
-    private String getLastSymbol()
+    private String getLastNum()
     {
-        return (expression == null || expression.length() == 0)
-                ? null
-                : String.valueOf(expression.charAt(expression.length() - 1));
-
-    }
-    private String getLastNumber()
-    {
-
-        if (expression.length() == 0)
+        if (isScreenEmpty() || expression.equals("("))
             return "";
         int index = expression.length() - 1;
-        if(!isNumeric(getLastSymbol()))
+        if(!isLastSymNum())
             index--;
         int i = index;
         do
         {
-            if(i == 0 || !isCharNumeric(expression.charAt(i - 1)) && expression .charAt(i - 1) != '.'){
-                return expression.substring(i, index + 1);
-            }
+            if(!isNumeric(expression.charAt(i))
+            && expression.charAt(i) != '.')
+                return expression.substring(i + 1, index+1);
+            if(i == 0)
+                return expression.substring(i, index+1);
             i--;
         }
-            while (true);
+        while (true);
     }
     private boolean hasLastNumberDot()
     {
-        return getLastNumber().contains(".");
+        return getLastNum().contains(".");
+    }
+    private boolean isLastSymNum()
+    {
+        return isNumeric(getLastSym());
+    }
+    private int countOf(char sym)
+    {
+        int count = 0;
+        for (char element : expression.toCharArray())
+            if (element == sym) count++;
+        return count;
+    }
+    private boolean hasOpened(char leftSym, char rightSym)
+    {
+        return countOf(leftSym) > countOf(rightSym);
     }
 }
