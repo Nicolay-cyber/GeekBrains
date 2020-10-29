@@ -115,10 +115,15 @@ public class CalculatorV2 extends JFrame
                 case ".":
                     dotClicked(buttonSym);
                     break;
+                case "-":
+                    if(!isLastSym(scnEqs, '('))
+                    removeLastNotNum();
+                    scnEqs += buttonSym;
+                    break;
                 default:
                     if(isNumeric(buttonSym.charAt(0)))
                     {
-                        if(isLastSym(scnEqs,'0') && !hasLastNumberDot(scnEqs))
+                        if(!isLastSym(scnEqs,'.') && lastStrNumOF(scnEqs).equals("0"))
                             removeLastChar();
                         if (!isLastSym(scnEqs,')'))
                         scnEqs += buttonSym;
@@ -164,7 +169,7 @@ public class CalculatorV2 extends JFrame
         //searching of the index last digit of the number
         for(int i = 0; i < s.length(); i++)
         {
-            if(isNumeric(s.charAt(i)))
+            if(isNumeric(s.charAt(i)) || s.charAt(i) == '-')
             {
                 idLastSym = i;
                 break;
@@ -172,7 +177,7 @@ public class CalculatorV2 extends JFrame
         }
         for(int i = idLastSym; i < s.length(); i++)
         {
-            if (!isNumeric(s.charAt(i)) && s.charAt(i) != '.')
+            if (!isNumeric(s.charAt(i)) && s.charAt(i) != '.' && s.charAt(i) != '-' && s.charAt(i) != 'E')
                 return s.substring(idLastSym, i);
         }
         return s.substring(idLastSym);
@@ -194,11 +199,10 @@ public class CalculatorV2 extends JFrame
             return "";
         for(int i = id; i != -1; i--)
         {
-            if(!isNumeric(s.charAt(i)) && s.charAt(i) != '.')
+            if(!isNumeric(s.charAt(i)) && s.charAt(i) != '.' && s.charAt(i) != '-' && s.charAt(i) != 'E')
                 return s.substring(i + 1, id + 1);
         }
         return s.substring(0, id + 1);
-
     }
     private double lastNumOF(String s)
     {
@@ -237,6 +241,13 @@ public class CalculatorV2 extends JFrame
         while (insEqs.contains("()")) {
             insEqs = insEqs.replace("()","");
         }
+        while (insEqs.contains("-")) {
+            insEqs = insEqs.replace("-","n");
+        }
+        while (insEqs.contains("n")) {
+            insEqs = insEqs.replace("n","+-");
+        }
+        System.out.println("insEqs " + insEqs);
     }
     private void dotClicked(String buttonSym)
     {
@@ -256,14 +267,15 @@ public class CalculatorV2 extends JFrame
         System.out.println
         ( "\n" + buttonSym + " is clicked"
             +"\nScreen equation: " + scnEqs
-            + "\nLast number: " + lastNumOF(scnEqs)
-            + "\nLast symbol: " + lastSymOf(scnEqs)
-            + "\nHas opened brackets: " + hasOpened(scnEqs,'(', ')')
+            + "\nLast number: " + lastNumOF(insEqs)
+            + "\nLast string number: " + lastStrNumOF(scnEqs)
+            + "\nLast symbol: " + lastSymOf(insEqs)
+            + "\nHas opened brackets: " + hasOpened(insEqs,'(', ')')
 //            + "\nResult: " + calc(insEqs)
-            + "\nFirst num: " + firstNumOf(scnEqs)
-            + "\nId first action: " + idFirstActionOf(scnEqs)
-            + "\nFirst action: " + firstActionOF(scnEqs)
-            + "\nLast action: " + lastActionOf(scnEqs)
+            + "\nFirst num: " + firstNumOf(insEqs)
+            + "\nId first action: " + idFirstActionOf(insEqs)
+            + "\nFirst action: " + firstActionOF(insEqs)
+//            + "\nLast action: " + lastActionOf(scnEqs)
         );
     }
     private boolean hasLastNumberDot(String s)
@@ -323,19 +335,13 @@ public class CalculatorV2 extends JFrame
             return "∞";
         return insEqs;
     }
-    private boolean isNumNeg(String s)
-    {
-        firstNumOf(s);
-        return false;
-    }
     private char lastActionOf (String s)
     {
         char[] str = s.toCharArray();
         for(int i = s.length() - 1; i != 0; i--)
-            if(str[i] == '+' || str[i] == '-' || str[i]  == DIV || str[i]  == MULT)
+            if(str[i] == '+' || str[i]  == DIV || str[i]  == MULT)
                 return str[i] ;
         return '?';
-
     }
     private Number calcBrackets(String s)
     {
@@ -357,9 +363,6 @@ public class CalculatorV2 extends JFrame
                     case '+':
                         res = firstNum + secondNum;
                         break;
-                    case '-':
-                        res = firstNum - secondNum;
-                        break;
                     case MULT:
                         res = firstNum * secondNum;
                         break;
@@ -368,91 +371,37 @@ public class CalculatorV2 extends JFrame
                         break;
                 }
                 System.out.println(String.valueOf(firstNum) + String.valueOf(act) + String.valueOf(secondNum) + " = " + res);
+                System.out.println( "firstNum "+ firstNum);
+                System.out.println("act " + act);
+                System.out.println("secondNum " + secondNum);
+
                 int beginningOldStr = idFirstAction - lastStrNumOF(s.substring(0,idFirstAction)).length();
                 int endOldSrt = idFirstAction + firstStrNumOf(s.substring(idFirstAction + 1)).length();
                 String oldStr = s.substring(beginningOldStr, endOldSrt + 1);
-                s = s.replace(oldStr, String.valueOf(res));
+                System.out.println("oldStr " + oldStr);
+                System.out.println("res " + res);
+                oldStr = oldStr.replace("+", "\\+"); //for correct work of replaceFirst method
+                s = s.replaceFirst(oldStr, String.valueOf(res));
                 if (s.contains("Infinity"))
                     return null;
             }
-            System.out.println(s);
+            System.out.println("it's done " + s);
             return Double.parseDouble(s);
         }
         return firstNumOf(s);
     }
-/*    private String getRes()
-    {
-        StringBuilder equation = new StringBuilder(scnEqs);
-        int bracketCount = countOf('(');
-        for(int i = 0; i < countOf('(') - countOf(')'); i++)
-        {
-            equation.append(")");
-        }
-        for(int i = 0; i < bracketCount; i++)
-        {
-            int startIndex = equation.lastIndexOf("(");
-            int endIndex = equation.indexOf(")");
-            String bracketEquation = equation.substring(startIndex + 1, endIndex);
-            equation.replace(startIndex, endIndex, calculate(bracketEquation));
-        }
-        return calculate(String.valueOf(equation));
-    }*/
-/*
-    private String calculate(String s)
-    {
-        double res = 0;
-        do
-        {
-            switch (getFirstAction(s))
-            {
-                case '+':
-                    res = firstNumOf(s) + getSecondNum(s);
-                    break;
-                case '-':
-                    res = firstNumOf(s) - (getSecondNum(s));
-                    break;
-                case '÷':
-                    res = toDouble(firstNumOf(s)) / toDouble(getSecondNum(s));
-                    break;
-                case '×':
-                    res = toDouble(firstNumOf(s)) * toDouble(getSecondNum(s));
-                    break;
-            }
-
-            int lastIndexSecondNum = s.indexOf(getSecondNum(s),s.indexOf(getFirstAction(s))) + getSecondNum(s).length();
-            String oldStr = s.substring(0, lastIndexSecondNum);
-            s = s.replace(oldStr,String.valueOf(res));
-        }
-        while (getFirstAction(s) != '?');
-        return String.valueOf(res);
-    }
-*/
-
     private char firstActionOF(String s)
     {
         for(char sym: s.toCharArray())
-            if(sym == '+' || sym == '-' || sym == DIV || sym == MULT)
+            if(sym == '+'|| sym == DIV || sym == MULT)
                 return sym;
         return '?';
     }
     private int idFirstActionOf(String s)
     {
         for(char sym: s.toCharArray())
-            if(sym == '+' || sym == '-' || sym == DIV || sym == MULT)
+            if(sym == '+'|| sym == DIV || sym == MULT)
                 return s.indexOf(sym);
         return -1 ;
     }
-/*
-    private String getSecondNum(String s)
-    {
-        if(getFirstAction(s) == '?' || !isNumeric(s.charAt(s.length() - 1)))
-            return "0";
-        String shortEquation = s.substring(s.indexOf(getFirstAction(s)));
-        return getFirstNum(shortEquation);
-    }
-    private double toDouble(String strNum)
-    {
-        return Double.parseDouble(strNum);
-    }
-*/
 }
