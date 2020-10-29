@@ -132,6 +132,9 @@ public class CalculatorV2 extends JFrame
                     }
                     break;
             }
+            scnEqs = scnEqs.replace("--", "-");
+            if(countOf(scnEqs,'(') < countOf(scnEqs,')'))
+                removeLastChar();
             createInsideEquation();
             screen.setText(scnEqs + "\n= " + calc());
 //            info(buttonSym);
@@ -311,19 +314,14 @@ public class CalculatorV2 extends JFrame
         if(countOf(insEqs,'(') > 0){
             while (countOf(insEqs,'(') > 0)
             {
-                System.out.println("insEqs "+ insEqs);
                 int idRightBracket = insEqs.indexOf(")");
-                System.out.println("idRightBracket " + idRightBracket);
                 int idLeftBracket = (insEqs.substring(0,idRightBracket)).lastIndexOf("(");
                 String BracketEqs = insEqs.substring(idLeftBracket + 1, idRightBracket);
                 String oldStr = insEqs.substring(idLeftBracket, idRightBracket + 1);
-                System.out.println("oldStr" + oldStr);
                 String newStr = String.valueOf(calcBrackets(BracketEqs));
-                System.out.println("newStr" + newStr);
                 if(newStr.equals("null"))
                     return "∞";
                 insEqs = insEqs.replace(oldStr, newStr);
-                System.out.println(insEqs);
             }
         }
             insEqs = String.valueOf(calcBrackets(insEqs));
