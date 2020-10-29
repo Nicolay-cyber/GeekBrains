@@ -13,7 +13,7 @@ public class CalculatorV2 extends JFrame
     private final char MULT = '×';
     private final char DIV = '÷';
 
-    private final JTextPane  screen = new JTextPane ();
+    private final JTextArea  screen = new JTextArea ();
     char[] buttonSymbols = {'c' ,'C', 'd', DIV,
                             '7', '8', '9', MULT,
                             '4', '5', '6', '+',
@@ -41,17 +41,14 @@ public class CalculatorV2 extends JFrame
     }
     private void calculatorScreenSetting()
     {
-        StyledDocument doc = screen.getStyledDocument();
-        SimpleAttributeSet right = new SimpleAttributeSet();
-        StyleConstants.setAlignment(right, StyleConstants.ALIGN_RIGHT);
-        doc.setParagraphAttributes(0, doc.getLength(), right, false);
-
+        screen.setLineWrap(true);
+        screen.setBorder(BorderFactory.createEmptyBorder(20,20,20,20));
         screen.setEditable(false);
-        screen.setBorder(BorderFactory.createEmptyBorder(30,20,20,20));
-        screen.setFont(new Font("Calibri Light", Font.PLAIN, 30));
+        screen.setFont(new Font("Calibri Light", Font.PLAIN, 25));
         screen.setBackground(Color.getHSBColor(0,0,0.9f));
         screen.setPreferredSize(new Dimension(getWidth(),250));
-        add(screen, BorderLayout.NORTH);
+        JScrollPane scroll = new JScrollPane(screen, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        add(scroll, BorderLayout.NORTH);
     }
     private void calculatorKeyboardSetting()
     {
@@ -96,7 +93,7 @@ public class CalculatorV2 extends JFrame
                         scnEqs += buttonSym;
                     break;
                 case ")":
-                    if(hasOpened(scnEqs,'(', ')') && firstActionOF(scnEqs) != '?')
+                    if(hasOpened(scnEqs,'(', ')'))
                     {
                         removeLastNotNum();
                         scnEqs += buttonSym;
@@ -136,8 +133,8 @@ public class CalculatorV2 extends JFrame
                     break;
             }
             createInsideEquation();
-            screen.setText(scnEqs + "\n" + calc());
-            info(buttonSym);
+            screen.setText(scnEqs + "\n= " + calc());
+//            info(buttonSym);
         }
     }
     private boolean isEmpty(String s)
@@ -247,7 +244,6 @@ public class CalculatorV2 extends JFrame
         while (insEqs.contains("n")) {
             insEqs = insEqs.replace("n","+-");
         }
-        System.out.println("insEqs " + insEqs);
     }
     private void dotClicked(String buttonSym)
     {
@@ -262,6 +258,7 @@ public class CalculatorV2 extends JFrame
         if(!(scnEqs == null) && !isEmpty(scnEqs))
             scnEqs = scnEqs.substring(0, scnEqs.length() - 1);
     }
+/*
     private void info(String buttonSym)
     {
         System.out.println
@@ -271,13 +268,12 @@ public class CalculatorV2 extends JFrame
             + "\nLast string number: " + lastStrNumOF(scnEqs)
             + "\nLast symbol: " + lastSymOf(insEqs)
             + "\nHas opened brackets: " + hasOpened(insEqs,'(', ')')
-//            + "\nResult: " + calc(insEqs)
             + "\nFirst num: " + firstNumOf(insEqs)
             + "\nId first action: " + idFirstActionOf(insEqs)
             + "\nFirst action: " + firstActionOF(insEqs)
-//            + "\nLast action: " + lastActionOf(scnEqs)
         );
     }
+*/
     private boolean hasLastNumberDot(String s)
     {
         return lastStrNumOF(s).contains(".");
@@ -325,7 +321,7 @@ public class CalculatorV2 extends JFrame
                 String newStr = String.valueOf(calcBrackets(BracketEqs));
                 System.out.println("newStr" + newStr);
                 if(newStr.equals("null"))
-                    return "Error";
+                    return "∞";
                 insEqs = insEqs.replace(oldStr, newStr);
                 System.out.println(insEqs);
             }
@@ -349,6 +345,8 @@ public class CalculatorV2 extends JFrame
         {
             while(firstActionOF(s) != '?' || s.indexOf(String.valueOf(lastActionOf(s))) > 0)
             {
+                s = s.replace("--", "+");
+
                 double res = 0;
                 int idFirstAction = idFirstActionOf(s);
                 if(s.indexOf(MULT) > s.indexOf(DIV))
@@ -370,22 +368,14 @@ public class CalculatorV2 extends JFrame
                         res = firstNum / secondNum;
                         break;
                 }
-                System.out.println(String.valueOf(firstNum) + String.valueOf(act) + String.valueOf(secondNum) + " = " + res);
-                System.out.println( "firstNum "+ firstNum);
-                System.out.println("act " + act);
-                System.out.println("secondNum " + secondNum);
-
                 int beginningOldStr = idFirstAction - lastStrNumOF(s.substring(0,idFirstAction)).length();
                 int endOldSrt = idFirstAction + firstStrNumOf(s.substring(idFirstAction + 1)).length();
                 String oldStr = s.substring(beginningOldStr, endOldSrt + 1);
-                System.out.println("oldStr " + oldStr);
-                System.out.println("res " + res);
                 oldStr = oldStr.replace("+", "\\+"); //for correct work of replaceFirst method
                 s = s.replaceFirst(oldStr, String.valueOf(res));
                 if (s.contains("Infinity"))
                     return null;
             }
-            System.out.println("it's done " + s);
             return Double.parseDouble(s);
         }
         return firstNumOf(s);
